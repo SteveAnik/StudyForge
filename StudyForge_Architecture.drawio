@@ -1,0 +1,202 @@
+<mxfile host="app.diagrams.net" agent="Cursor" pages="4">
+  <diagram id="system-architecture" name="1) System Architecture">
+    <mxGraphModel dx="1129" dy="924" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="user" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="User (Student)" vertex="1">
+          <mxGeometry height="60" width="170" x="60" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="frontend" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="Web UI (React + JS)" vertex="1">
+          <mxGeometry height="60" width="220" x="370" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="state" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="Auth Context + React Query Cache" vertex="1">
+          <mxGeometry height="60" width="260" x="350" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="api" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" value="Flask API (Blueprint Routes)" vertex="1">
+          <mxGeometry height="60" width="250" x="800" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="services" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" value="Service Layer&#xa;- AuthService&#xa;- TaskService&#xa;- PracticeService&#xa;- AnalyticsService" vertex="1">
+          <mxGeometry height="120" width="290" x="780" y="230" as="geometry" />
+        </mxCell>
+        <mxCell id="repo" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" value="Repository Layer" vertex="1">
+          <mxGeometry height="60" width="220" x="815" y="450" as="geometry" />
+        </mxCell>
+        <mxCell id="orm" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" value="SQLAlchemy ORM" vertex="1">
+          <mxGeometry height="60" width="180" x="1280" y="450" as="geometry" />
+        </mxCell>
+        <mxCell id="db" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" value="PostgreSQL (Supabase)" vertex="1">
+          <mxGeometry height="60" width="210" x="1270" y="680" as="geometry" />
+        </mxCell>
+        <mxCell id="logging" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;dashed=1;" value="Logging + Error Handler" vertex="1">
+          <mxGeometry height="60" width="230" x="1270" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" edge="1" parent="1" source="user" style="endArrow=block;html=1;" target="frontend" value="interacts">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" edge="1" parent="1" source="frontend" style="endArrow=block;html=1;" target="api" value="HTTPS JSON requests">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" edge="1" parent="1" source="api" style="endArrow=block;html=1;" target="services" value="business logic">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" edge="1" parent="1" source="services" style="endArrow=block;html=1;" target="repo" value="data abstraction">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" edge="1" parent="1" source="repo" style="endArrow=block;html=1;" target="orm" value="query mapping">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" edge="1" parent="1" source="orm" style="endArrow=block;html=1;" target="db" value="CRUD ops">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e7" edge="1" parent="1" source="api" style="dashed=1;endArrow=block;html=1;" target="logging" value="exceptions/events">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="backend-components" name="2) Backend Components">
+    <mxGraphModel dx="1600" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="routes" value="Routes&#xa;auth_routes.py&#xa;task_routes.py&#xa;practice_routes.py&#xa;analytics_routes.py" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="60" y="90" width="260" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="schemas" value="Schemas / Validators" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="370" y="90" width="220" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="services2" value="Services&#xa;AuthService, TaskService,&#xa;PracticeService, AnalyticsService" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="370" y="200" width="270" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="repos2" value="Repositories" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="700" y="200" width="180" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="models2" value="Models (SQLAlchemy)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="930" y="200" width="190" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="algos2" value="Algorithms Module&#xa;sorting.py&#xa;searching.py&#xa;recursion_utils.py" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="700" y="320" width="220" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="note2" value="Controller logic stays thin; business rules live in services for testability." style="shape=note;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="60" y="300" width="280" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="be1" value="validate request" style="endArrow=block;html=1;" edge="1" parent="1" source="routes" target="schemas">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="be2" value="use cases" style="endArrow=block;html=1;" edge="1" parent="1" source="routes" target="services2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="be3" value="data operations" style="endArrow=block;html=1;" edge="1" parent="1" source="services2" target="repos2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="be4" value="ORM entities" style="endArrow=block;html=1;" edge="1" parent="1" source="repos2" target="models2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="be5" value="challenge evaluation" style="endArrow=block;html=1;dashed=1;" edge="1" parent="1" source="services2" target="algos2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="data-flow" name="3) Data Flow">
+    <mxGraphModel dx="1600" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="lane1" value="User" style="swimlane;html=1;rounded=0;fillColor=#f5f5f5;strokeColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="40" y="60" width="240" height="700" as="geometry" />
+        </mxCell>
+        <mxCell id="lane2" value="Frontend" style="swimlane;html=1;rounded=0;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="290" y="60" width="300" height="700" as="geometry" />
+        </mxCell>
+        <mxCell id="lane3" value="API Routes" style="swimlane;html=1;rounded=0;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="600" y="60" width="260" height="700" as="geometry" />
+        </mxCell>
+        <mxCell id="lane4" value="Service Layer" style="swimlane;html=1;rounded=0;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="870" y="60" width="300" height="700" as="geometry" />
+        </mxCell>
+        <mxCell id="lane5" value="Database" style="swimlane;html=1;rounded=0;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="1180" y="60" width="260" height="700" as="geometry" />
+        </mxCell>
+        <mxCell id="df-note" value="Flow A: Task Creation&#xa;Flow B: Practice Evaluation" style="shape=note;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="60" y="90" width="200" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="df1" value="1) Submit form" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="230" width="160" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="df2" value="2) Validate fields" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="350" y="230" width="180" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="df3" value="3) POST /api/tasks" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="640" y="230" width="180" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="df4" value="4) Business rules" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="930" y="230" width="180" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="df5" value="5) Insert + Commit" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1230" y="230" width="170" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="df6" value="6) Return JSON" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="640" y="320" width="180" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="df7" value="7) Update UI/cache" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="350" y="320" width="180" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="df8" value="8) Show result" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="320" width="160" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="dfe1" style="endArrow=block;html=1;strokeColor=#2e7d32;" edge="1" parent="1" source="df1" target="df2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dfe2" style="endArrow=block;html=1;strokeColor=#2e7d32;" edge="1" parent="1" source="df2" target="df3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dfe3" style="endArrow=block;html=1;strokeColor=#2e7d32;" edge="1" parent="1" source="df3" target="df4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dfe4" style="endArrow=block;html=1;strokeColor=#2e7d32;" edge="1" parent="1" source="df4" target="df5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dfe5" style="endArrow=block;html=1;strokeColor=#2e7d32;" edge="1" parent="1" source="df5" target="df6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dfe6" style="endArrow=block;html=1;strokeColor=#2e7d32;" edge="1" parent="1" source="df6" target="df7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dfe7" style="endArrow=block;html=1;strokeColor=#2e7d32;" edge="1" parent="1" source="df7" target="df8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="erd" name="4) Database ERD">
+    <mxGraphModel dx="1600" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="users" value="users&#xa;---&#xa;id (uuid, PK)&#xa;email (unique)&#xa;password_hash&#xa;created_at" style="shape=rectangle;whiteSpace=wrap;html=1;rounded=0;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="100" y="100" width="260" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="courses" value="courses&#xa;---&#xa;id (uuid, PK)&#xa;user_id (FK -&gt; users.id)&#xa;name&#xa;term" style="shape=rectangle;whiteSpace=wrap;html=1;rounded=0;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="450" y="80" width="280" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="tasks" value="tasks&#xa;---&#xa;id (uuid, PK)&#xa;course_id (FK -&gt; courses.id)&#xa;title&#xa;description&#xa;due_date&#xa;priority&#xa;status&#xa;estimated_minutes" style="shape=rectangle;whiteSpace=wrap;html=1;rounded=0;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="820" y="60" width="300" height="250" as="geometry" />
+        </mxCell>
+        <mxCell id="attempts" value="practice_attempts&#xa;---&#xa;id (uuid, PK)&#xa;user_id (FK -&gt; users.id)&#xa;topic&#xa;challenge_id&#xa;input_payload (jsonb)&#xa;expected_output (jsonb)&#xa;submitted_output (jsonb)&#xa;is_correct&#xa;duration_seconds&#xa;created_at" style="shape=rectangle;whiteSpace=wrap;html=1;rounded=0;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="450" y="330" width="420" height="280" as="geometry" />
+        </mxCell>
+        <mxCell id="er1" value="1 to many" style="endArrow=block;html=1;" edge="1" parent="1" source="users" target="courses">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="er2" value="1 to many" style="endArrow=block;html=1;" edge="1" parent="1" source="courses" target="tasks">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="er3" value="1 to many" style="endArrow=block;html=1;" edge="1" parent="1" source="users" target="attempts">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
