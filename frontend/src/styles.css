@@ -5,7 +5,7 @@
 body {
   margin: 0;
   font-family: Inter, "Segoe UI", system-ui, -apple-system, sans-serif;
-  background: radial-gradient(circle at top left, #131827, #0e111c 45%, #0b0d14 100%);
+  background: radial-gradient(circle at top left, #1f2b5a, #141a34 38%, #0a1024 100%);
   color: #e7ecff;
 }
 
@@ -66,6 +66,7 @@ h1, h2, h3, h4, p {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  background: linear-gradient(180deg, #172245, #131c39);
 }
 
 .sidebar-title {
@@ -73,16 +74,22 @@ h1, h2, h3, h4, p {
   font-size: 1.35rem;
 }
 
-.sidebar-nav {
-  display: grid;
-  gap: 10px;
-  align-content: start;
-  margin-top: auto;
+.status-badge {
+  display: inline-flex;
+  width: fit-content;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid #4f64bb;
+  color: #c6d5ff;
+  background: #1b2b59;
+  font-size: 0.78rem;
+  margin-bottom: 8px;
 }
 
 .sidebar-footer {
   display: grid;
   gap: 8px;
+  margin-top: auto;
 }
 
 .section-view {
@@ -91,6 +98,13 @@ h1, h2, h3, h4, p {
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
   gap: 10px;
+}
+
+@media (max-width: 1280px) {
+  .hero-metrics {
+    min-width: 0;
+    grid-template-columns: repeat(3, minmax(90px, 1fr));
+  }
 }
 
 .focus-panel {
@@ -106,11 +120,42 @@ h1, h2, h3, h4, p {
 
 .dashboard-header {
   margin-bottom: 0;
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
 }
 
 .dashboard-header .subtitle {
   margin-bottom: 0;
   max-width: 700px;
+}
+
+.hero-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(120px, 1fr));
+  gap: 8px;
+  min-width: 390px;
+}
+
+.hero-metric {
+  border: 1px solid #334b8e;
+  border-radius: 12px;
+  padding: 10px;
+  background: linear-gradient(180deg, #1b2a53, #172445);
+  display: grid;
+  gap: 4px;
+}
+
+.hero-metric span {
+  font-size: 0.76rem;
+  color: #9eb3e7;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.hero-metric strong {
+  font-size: 1rem;
+  color: #edf2ff;
 }
 
 .header h1 {
@@ -128,7 +173,7 @@ h1, h2, h3, h4, p {
   border: 1px solid #29324a;
   border-radius: 14px;
   padding: 18px;
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 12px 34px rgba(9, 18, 45, 0.42);
 }
 
 .panel-body {
@@ -187,7 +232,7 @@ input:focus, select:focus {
 }
 
 button {
-  background: linear-gradient(180deg, #4471e2, #355ec4);
+  background: linear-gradient(180deg, #5a83ff, #3166db);
   border: none;
   color: #f8fbff;
   font-weight: 600;
@@ -204,9 +249,9 @@ button.secondary {
   width: 100%;
   margin-bottom: 0;
   text-align: left;
-  background: #181f31;
-  border: 1px solid #273651;
-  color: #c8d6ff;
+  background: #1b274d;
+  border: 1px solid #334b8f;
+  color: #d4e0ff;
   display: grid;
   gap: 4px;
   padding: 12px;
@@ -218,8 +263,8 @@ button.secondary {
 }
 
 .sidebar-btn.active {
-  background: linear-gradient(180deg, #5a67f1, #3f48b8);
-  border-color: #7f8cff;
+  background: linear-gradient(180deg, #6f58ff, #2f7ff5);
+  border-color: #8da2ff;
   color: #f2f6ff;
 }
 
@@ -414,6 +459,15 @@ li {
   .section-view {
     height: auto;
     min-height: auto;
+  }
+
+  .dashboard-header {
+    display: grid;
+  }
+
+  .hero-metrics {
+    min-width: 0;
+    grid-template-columns: repeat(3, minmax(100px, 1fr));
   }
 
   .panel-shell {

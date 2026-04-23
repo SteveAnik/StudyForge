@@ -23,6 +23,7 @@ export default function DashboardPage() {
         <aside className="card sidebar minimal-sidebar">
           <p className="eyebrow">StudyForge</p>
           <h2 className="sidebar-title">Programmer Hub</h2>
+          <div className="status-badge">Live Practice Platform</div>
           <div className="sidebar-nav">
             {SECTIONS.map((section) => (
               <button
@@ -47,6 +48,20 @@ export default function DashboardPage() {
               <p className="eyebrow">Quizlet-inspired coding workspace</p>
               <h1>{activeItem?.label}</h1>
               <p className="subtitle">Learn concepts, practice actively, and build coding confidence daily.</p>
+            </div>
+            <div className="hero-metrics">
+              <div className="hero-metric">
+                <span>Daily Goal</span>
+                <strong>5 Exercises</strong>
+              </div>
+              <div className="hero-metric">
+                <span>Streak</span>
+                <strong>12 Days</strong>
+              </div>
+              <div className="hero-metric">
+                <span>Mastery</span>
+                <strong>74%</strong>
+              </div>
             </div>
           </header>
           <div className="card panel-shell">
