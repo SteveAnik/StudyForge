@@ -6,15 +6,16 @@ import PracticePanel from '../components/PracticePanel'
 import TaskPlanner from '../components/TaskPlanner'
 
 const SECTIONS = [
-  { key: 'practice', label: 'Learn & Practice', hint: 'Challenges and coding drills' },
+  { key: 'challenge', label: 'Challenge Lab', hint: 'Focused coding challenges only' },
+  { key: 'flashcards', label: 'Exam Flashcards', hint: 'Rapid concept recall practice' },
   { key: 'organization', label: 'Learning Tracks', hint: 'Courses and structured paths' },
   { key: 'planning', label: 'Exercise Planner', hint: 'Build your coding routine' },
-  { key: 'insights', label: 'Progress Radar', hint: 'Mastery and growth metrics' }
+  { key: 'insights', label: 'Progress Radar', hint: 'Auto-updating mastery analytics' }
 ]
 
 export default function DashboardPage() {
   const { auth, logout } = useAuth()
-  const [activeSection, setActiveSection] = useState('practice')
+  const [activeSection, setActiveSection] = useState('challenge')
   const activeItem = SECTIONS.find((section) => section.key === activeSection)
 
   return (
@@ -65,7 +66,8 @@ export default function DashboardPage() {
             </div>
           </header>
           <div className="card panel-shell">
-            {activeSection === 'practice' ? <PracticePanel /> : null}
+            {activeSection === 'challenge' ? <PracticePanel mode="challenge" /> : null}
+            {activeSection === 'flashcards' ? <PracticePanel mode="flashcards" /> : null}
             {activeSection === 'organization' ? <CourseManager /> : null}
             {activeSection === 'planning' ? <TaskPlanner /> : null}
             {activeSection === 'insights' ? <AnalyticsPanel /> : null}

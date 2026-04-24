@@ -13,20 +13,48 @@ const FLASHCARDS = [
   { topic: 'searching', question: 'When can binary search be applied?', answer: 'Only when the data is sorted (or monotonic by key).' }
 ]
 
-const CODE_SPRINT = [
-  { topic: 'arrays', question: 'Best complexity for finding max in unsorted array?', answer: 'O(n)', options: ['O(log n)', 'O(n)', 'O(n log n)'] },
-  { topic: 'stacks', question: 'Which operation removes top stack element?', answer: 'pop', options: ['push', 'peek', 'pop'] },
-  { topic: 'searching', question: 'Binary search requires which precondition?', answer: 'sorted data', options: ['hashed data', 'sorted data', 'unique data'] },
-  { topic: 'recursion', question: 'Missing base case most likely causes?', answer: 'infinite recursion', options: ['faster runtime', 'infinite recursion', 'constant memory'] }
-]
+const EDITOR_TEMPLATE = `function solve(input) {
+  return input
+}`
 
-export default function PracticePanel() {
+function parseOutput(value, type) {
+  if (type === 'number') {
+    return Number(value)
+  }
+  if (type === 'boolean') {
+    return value.trim().toLowerCase() === 'true'
+  }
+  if (type === 'array') {
+    return value
+      .split(/,|\n/)
+      .map((v) => Number(v.trim()))
+      .filter((v) => !Number.isNaN(v))
+  }
+  return value
+}
+
+function outputPlaceholder(submissionType) {
+  if (submissionType === 'array') return 'Use comma or newline separated values'
+  if (submissionType === 'boolean') return 'true or false'
+  if (submissionType === 'number') return 'Enter a number'
+  return 'Enter output value'
+}
+
+export default function PracticePanel({ mode = 'challenge' }) {
   const [topic, setTopic] = useState('all')
-  const { data: challenges = [] } = usePracticeChallenges(topic === 'all' ? undefined : topic)
+  const {
+    data: challenges = [],
+    isLoading: isChallengeLoading,
+    isError: challengeLoadError,
+    error: challengeError,
+    refetch: refetchChallenges
+  } = usePracticeChallenges(topic === 'all' ? undefined : topic)
   const evaluate = useEvaluatePractice()
   const [selectedChallengeId, setSelectedChallengeId] = useState('')
-  const [submitted, setSubmitted] = useState('')
+  const [submittedOutput, setSubmittedOutput] = useState('')
+  const [editorCode, setEditorCode] = useState(EDITOR_TEMPLATE)
   const [result, setResult] = useState(null)
+  const [submitError, setSubmitError] = useState('')
   const [isFlipped, setIsFlipped] = useState(false)
   const [flashcardIndex, setFlashcardIndex] = useState(0)
 
@@ -41,19 +69,21 @@ export default function PracticePanel() {
   )
 
   const currentFlashcard = visibleFlashcards[flashcardIndex] || null
-  const visibleCodeSprint = useMemo(
-    () => (topic === 'all' ? CODE_SPRINT : CODE_SPRINT.filter((item) => item.topic === topic)),
-    [topic]
-  )
 
   useEffect(() => {
-    if (challenges.length > 0) {
-      setSelectedChallengeId(challenges[0].id)
-      setSubmitted('')
-      setResult(null)
-    } else {
+    if (!challenges.length) {
       setSelectedChallengeId('')
+      return
     }
+    setSelectedChallengeId((prev) => {
+      if (prev && challenges.some((challenge) => challenge.id === prev)) {
+        return prev
+      }
+      return challenges[0].id
+    })
+    setSubmittedOutput('')
+    setResult(null)
+    setSubmitError('')
   }, [challenges])
 
   useEffect(() => {
@@ -64,25 +94,22 @@ export default function PracticePanel() {
   async function submitAttempt(e) {
     e.preventDefault()
     if (!selectedChallenge) {
+      setSubmitError('Please select a challenge first.')
+      setResult(null)
       return
     }
-    let parsedOutput = submitted
-    if (selectedChallenge.submission_type === 'number') {
-      parsedOutput = Number(submitted)
+    setSubmitError('')
+    try {
+      const response = await evaluate.mutateAsync({
+        challenge_id: selectedChallenge.id,
+        submitted_output: parseOutput(submittedOutput, selectedChallenge.submission_type),
+        duration_seconds: 30
+      })
+      setResult(response)
+    } catch (error) {
+      setResult(null)
+      setSubmitError(error.message || 'Evaluation failed. Please try again.')
     }
-    if (selectedChallenge.submission_type === 'boolean') {
-      parsedOutput = submitted.trim().toLowerCase() === 'true'
-    }
-    if (selectedChallenge.submission_type === 'array') {
-      parsedOutput = submitted.split(',').map((v) => Number(v.trim())).filter((v) => !Number.isNaN(v))
-    }
-
-    const response = await evaluate.mutateAsync({
-      challenge_id: selectedChallenge.id,
-      submitted_output: parsedOutput,
-      duration_seconds: 30
-    })
-    setResult(response)
   }
 
   function nextFlashcard() {
@@ -101,85 +128,106 @@ export default function PracticePanel() {
     setIsFlipped(false)
   }
 
+  if (mode === 'flashcards') {
+    return (
+      <div className="panel-body focus-panel">
+        <p className="eyebrow">Active Recall</p>
+        <h3>Exam Flashcards</h3>
+        <div className="surface-block">
+          <select value={topic} onChange={(e) => setTopic(e.target.value)}>
+            {TOPICS.map((t) => (
+              <option key={t} value={t}>{t === 'all' ? 'All Topics' : t}</option>
+            ))}
+          </select>
+          <div className="flashcard-head">
+            <h4>Flashcard Deck</h4>
+            <p>{visibleFlashcards.length ? `${flashcardIndex + 1}/${visibleFlashcards.length}` : '0/0'}</p>
+          </div>
+          {currentFlashcard ? (
+            <button
+              type="button"
+              className={isFlipped ? 'flashcard is-flipped' : 'flashcard'}
+              onClick={() => setIsFlipped((prev) => !prev)}
+            >
+              <div className="flashcard-face flashcard-front">
+                <p className="eyebrow">Question</p>
+                <p>{currentFlashcard.question}</p>
+              </div>
+              <div className="flashcard-face flashcard-back">
+                <p className="eyebrow">Answer</p>
+                <p>{currentFlashcard.answer}</p>
+              </div>
+            </button>
+          ) : (
+            <p>No flashcards for this topic.</p>
+          )}
+          <div className="flashcard-actions">
+            <button type="button" className="secondary" onClick={prevFlashcard}>Previous</button>
+            <button type="button" className="secondary" onClick={nextFlashcard}>Next</button>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="panel-body focus-panel">
-      <p className="eyebrow">Learning + Practice + Play</p>
-      <h3>Programmer Training Arena</h3>
-      <div className="practice-layout">
-        <section className="practice-column">
-          <form onSubmit={submitAttempt} className="task-grid surface-block">
-            <h4>Challenge Lab</h4>
-            <select value={topic} onChange={(e) => setTopic(e.target.value)}>
-              {TOPICS.map((t) => (
-                <option key={t} value={t}>{t === 'all' ? 'All Topics' : t}</option>
-              ))}
-            </select>
-            <select value={selectedChallengeId} onChange={(e) => setSelectedChallengeId(e.target.value)}>
-              {challenges.map((challenge) => (
-                <option key={challenge.id} value={challenge.id}>{challenge.title}</option>
-              ))}
-            </select>
-            {selectedChallenge ? (
-              <div className="challenge-preview compact">
-                <p>{selectedChallenge.prompt}</p>
-                <p><strong>Input:</strong> {JSON.stringify(selectedChallenge.input_payload)}</p>
-                <input
-                  value={submitted}
-                  onChange={(e) => setSubmitted(e.target.value)}
-                  placeholder={selectedChallenge.submission_type === 'array' ? 'Comma-separated numbers' : 'Your answer'}
-                />
-              </div>
-            ) : null}
-            <div className="challenge-actions">
-              <button type="submit" disabled={!selectedChallenge}>Evaluate</button>
-              {result ? <p className="result-pill">Score: {result.score} - {result.feedback}</p> : null}
+      <p className="eyebrow">Focused practice mode</p>
+      <h3>Challenge Lab</h3>
+      <form onSubmit={submitAttempt} className="surface-block challenge-focused-layout">
+        <div className="challenge-meta">
+          <select value={topic} onChange={(e) => setTopic(e.target.value)}>
+            {TOPICS.map((t) => (
+              <option key={t} value={t}>{t === 'all' ? 'All Topics' : t}</option>
+            ))}
+          </select>
+          {isChallengeLoading ? <p>Loading challenges...</p> : null}
+          {challengeLoadError ? <p className="error">{challengeError?.message || 'Failed to load challenges.'}</p> : null}
+          <select value={selectedChallengeId} onChange={(e) => setSelectedChallengeId(e.target.value)} disabled={!challenges.length}>
+            {challenges.map((challenge) => (
+              <option key={challenge.id} value={challenge.id}>{challenge.title}</option>
+            ))}
+          </select>
+          {!isChallengeLoading && !challengeLoadError && !challenges.length ? (
+            <div className="challenge-preview">
+              <p>No challenges found for this topic yet.</p>
+              <button type="button" className="secondary" onClick={() => refetchChallenges()}>Reload Challenges</button>
             </div>
-          </form>
-
-          <div className="surface-block">
-            <div className="flashcard-head">
-              <h4>Exam Flashcards</h4>
-              <p>{visibleFlashcards.length ? `${flashcardIndex + 1}/${visibleFlashcards.length}` : '0/0'}</p>
+          ) : null}
+          {selectedChallenge ? (
+            <div className="challenge-preview">
+              <p>{selectedChallenge.prompt}</p>
+              <p><strong>Input payload:</strong> {JSON.stringify(selectedChallenge.input_payload)}</p>
+              <p><strong>Expected output type:</strong> {selectedChallenge.submission_type}</p>
+              <p><strong>Test cases:</strong> {selectedChallenge.test_cases.length}</p>
             </div>
-            {currentFlashcard ? (
-              <button
-                type="button"
-                className={isFlipped ? 'flashcard compact-flashcard is-flipped' : 'flashcard compact-flashcard'}
-                onClick={() => setIsFlipped((prev) => !prev)}
-              >
-                <div className="flashcard-face flashcard-front">
-                  <p className="eyebrow">Question</p>
-                  <p>{currentFlashcard.question}</p>
-                </div>
-                <div className="flashcard-face flashcard-back">
-                  <p className="eyebrow">Answer</p>
-                  <p>{currentFlashcard.answer}</p>
-                </div>
-              </button>
-            ) : (
-              <p>No flashcards for this topic.</p>
-            )}
-            <div className="flashcard-actions">
-              <button type="button" className="secondary" onClick={prevFlashcard}>Previous</button>
-              <button type="button" className="secondary" onClick={nextFlashcard}>Next</button>
-            </div>
+          ) : null}
+        </div>
+        <div className="editor-shell">
+          <label>Solution editor (draft area)</label>
+          <textarea
+            className="code-editor"
+            value={editorCode}
+            onChange={(e) => setEditorCode(e.target.value)}
+            spellCheck={false}
+          />
+          <label>Output to evaluate</label>
+          <textarea
+            className="output-editor"
+            value={submittedOutput}
+            onChange={(e) => setSubmittedOutput(e.target.value)}
+            placeholder={outputPlaceholder(selectedChallenge?.submission_type)}
+            spellCheck={false}
+          />
+          <div className="challenge-actions">
+            <button type="submit" disabled={!selectedChallenge || evaluate.isPending}>
+              {evaluate.isPending ? 'Evaluating...' : 'Run Evaluation'}
+            </button>
+            {submitError ? <p className="error result-pill">{submitError}</p> : null}
+            {result ? <p className="result-pill">Score: {result.score} - {result.feedback}</p> : null}
           </div>
-        </section>
-
-        <aside className="practice-column narrow-column">
-          <div className="surface-block quick-play">
-            <h4>Code Sprint</h4>
-            <div className="quiz-grid">
-              {visibleCodeSprint.map((item) => (
-                <div className="quiz-item" key={item.question}>
-                  <p>{item.question}</p>
-                  <p className="quiz-answer">Answer: {item.answer}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </aside>
-      </div>
+        </div>
+      </form>
     </div>
   )
 }

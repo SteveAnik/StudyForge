@@ -212,7 +212,7 @@ label {
   font-size: 0.9rem;
 }
 
-input, select, button {
+input, select, button, textarea {
   width: 100%;
   padding: 10px;
   border-radius: 10px;
@@ -221,12 +221,12 @@ input, select, button {
   font-size: 0.95rem;
 }
 
-input, select {
+input, select, textarea {
   background: #101523;
   color: #e7ecff;
 }
 
-input:focus, select:focus {
+input:focus, select:focus, textarea:focus {
   outline: 2px solid #5f82df;
   border-color: #5f82df;
 }
@@ -278,20 +278,35 @@ button.secondary {
   overflow: auto;
 }
 
-.practice-layout {
+.challenge-focused-layout {
   display: grid;
-  grid-template-columns: 1.2fr 0.8fr;
+  grid-template-columns: 0.9fr 1.1fr;
   gap: 12px;
 }
 
-.practice-column {
+.challenge-meta {
   display: grid;
-  gap: 10px;
   align-content: start;
+  gap: 8px;
 }
 
-.narrow-column {
-  grid-auto-rows: max-content;
+.editor-shell {
+  display: grid;
+  gap: 8px;
+}
+
+.code-editor {
+  min-height: 340px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  line-height: 1.5;
+  resize: vertical;
+}
+
+.output-editor {
+  min-height: 120px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  line-height: 1.4;
+  resize: vertical;
 }
 
 .surface-block {
@@ -308,10 +323,6 @@ button.secondary {
   background: #0f1524;
 }
 
-.challenge-preview.compact {
-  padding: 10px;
-}
-
 .challenge-actions {
   display: grid;
   gap: 8px;
@@ -324,6 +335,22 @@ button.secondary {
   border: 1px solid #2f4572;
   background: #18233e;
   color: #dbe6ff;
+}
+
+.radar-intro p {
+  margin-bottom: 8px;
+  color: #c8d7ff;
+}
+
+.radar-controls {
+  display: grid;
+  grid-template-columns: auto 220px;
+  gap: 10px;
+  align-items: end;
+}
+
+.radar-controls label {
+  margin: 0;
 }
 
 .flashcard-head {
@@ -470,11 +497,15 @@ li {
     grid-template-columns: repeat(3, minmax(100px, 1fr));
   }
 
+  .radar-controls {
+    grid-template-columns: 1fr;
+  }
+
   .panel-shell {
     overflow: visible;
   }
 
-  .practice-layout {
+  .challenge-focused-layout {
     grid-template-columns: 1fr;
   }
 }
