@@ -16,6 +16,15 @@ def list_challenges():
     return jsonify({"success": True, "data": data, "error": None})
 
 
+@practice_bp.post("/generate")
+def generate_challenge():
+    get_current_user()
+    payload = request.get_json(silent=True) or {}
+    topic = payload.get("topic")
+    data = PracticeService.generate_ai_challenge(topic=topic)
+    return jsonify({"success": True, "data": data, "error": None})
+
+
 @practice_bp.post("/evaluate")
 def evaluate_attempt():
     user = get_current_user()

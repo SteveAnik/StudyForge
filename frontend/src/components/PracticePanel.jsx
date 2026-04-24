@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { useEvaluatePractice, usePracticeChallenges } from '../hooks/usePractice'
+import { useEvaluatePractice, useGeneratePracticeChallenge, usePracticeChallenges } from '../hooks/usePractice'
 
 const TOPICS = ['all', 'arrays', 'linked_lists', 'stacks', 'queues', 'recursion', 'sorting', 'searching']
 
@@ -50,6 +50,7 @@ export default function PracticePanel({ mode = 'challenge' }) {
     refetch: refetchChallenges
   } = usePracticeChallenges(topic === 'all' ? undefined : topic)
   const evaluate = useEvaluatePractice()
+  const generateChallenge = useGeneratePracticeChallenge()
   const [selectedChallengeId, setSelectedChallengeId] = useState('')
   const [submittedOutput, setSubmittedOutput] = useState('')
   const [editorCode, setEditorCode] = useState(EDITOR_TEMPLATE)
@@ -114,6 +115,16 @@ export default function PracticePanel({ mode = 'challenge' }) {
     } catch (error) {
       setResult(null)
       setSubmitError(error.message || 'Evaluation failed. Please try again.')
+    }
+  }
+
+  async function generateNewChallenge() {
+    setSubmitError('')
+    try {
+      await generateChallenge.mutateAsync({ topic: topic === 'all' ? undefined : topic })
+      await refetchChallenges()
+    } catch (error) {
+      setSubmitError(error.message || 'Failed to generate challenge.')
     }
   }
 
@@ -188,6 +199,9 @@ export default function PracticePanel({ mode = 'challenge' }) {
           </select>
           {isChallengeLoading ? <p>Loading challenges...</p> : null}
           {challengeLoadError ? <p className="error">{challengeError?.message || 'Failed to load challenges.'}</p> : null}
+          <button type="button" className="secondary" onClick={generateNewChallenge} disabled={generateChallenge.isPending}>
+            {generateChallenge.isPending ? 'Generating...' : 'Generate with AI'}
+          </button>
           <select value={selectedChallengeId} onChange={(e) => setSelectedChallengeId(e.target.value)} disabled={!challenges.length}>
             {challenges.length ? null : <option value="">No challenge available</option>}
             {challenges.map((challenge) => (
