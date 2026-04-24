@@ -9,7 +9,7 @@ const TRACK_MATERIALS = [
 ]
 
 export default function CourseManager() {
-  const { data: courses = [] } = useCourses()
+  const { data: courses = [], isLoading, isError, error } = useCourses()
   const createCourse = useCreateCourse()
   const [name, setName] = useState('')
   const [term, setTerm] = useState('')
@@ -45,11 +45,15 @@ export default function CourseManager() {
       </div>
       <div className="surface-block">
         <h4>Your Created Tracks</h4>
-        <ul>
-          {courses.map((course) => (
-            <li key={course.id}>{course.name} ({course.term})</li>
-          ))}
-        </ul>
+        {isLoading ? <p>Loading your tracks...</p> : null}
+        {isError ? <p className="error">{error?.message || 'Failed to load tracks.'}</p> : null}
+        {!isLoading && !isError ? (
+          <ul>
+            {courses.map((course) => (
+              <li key={course.id}>{course.name} ({course.term})</li>
+            ))}
+          </ul>
+        ) : null}
       </div>
     </div>
   )

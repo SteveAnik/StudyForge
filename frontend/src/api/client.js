@@ -16,7 +16,12 @@ export async function apiRequest(path, { method = 'GET', token, body } = {}) {
 
   const payload = await res.json()
   if (!res.ok || !payload.success) {
-    throw new Error(payload.error || 'Request failed')
+    const message = payload?.error || 'Request failed'
+    if (res.status === 401 && message === 'Token expired') {
+      window.dispatchEvent(new CustomEvent('studyforge:auth-expired'))
+      throw new Error('Session expired. Please log in again.')
+    }
+    throw new Error(message)
   }
   return payload.data
 }

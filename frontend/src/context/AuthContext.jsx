@@ -1,4 +1,4 @@
-import { createContext, useContext, useMemo, useState } from 'react'
+import { createContext, useContext, useEffect, useMemo, useState } from 'react'
 
 const AuthContext = createContext(null)
 
@@ -7,6 +7,15 @@ export function AuthProvider({ children }) {
     const raw = localStorage.getItem('studyforge_auth')
     return raw ? JSON.parse(raw) : { token: null, user: null }
   })
+
+  useEffect(() => {
+    function handleExpired() {
+      localStorage.removeItem('studyforge_auth')
+      setAuth({ token: null, user: null })
+    }
+    window.addEventListener('studyforge:auth-expired', handleExpired)
+    return () => window.removeEventListener('studyforge:auth-expired', handleExpired)
+  }, [])
 
   const value = useMemo(() => ({
     auth,
