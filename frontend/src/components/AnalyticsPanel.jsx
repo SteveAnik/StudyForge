@@ -33,6 +33,9 @@ export default function AnalyticsPanel() {
     ]
   }, [overview])
 
+  const totalAttempts = overview?.practice_attempts || 0
+  const hasData = totalAttempts > 0
+
   return (
     <div className="panel-body">
       <p className="eyebrow">Performance view</p>
@@ -42,6 +45,7 @@ export default function AnalyticsPanel() {
           Progress Radar tracks your completion, accuracy, and topic mastery from every challenge evaluation.
           It updates automatically whenever new attempts are submitted.
         </p>
+        {!hasData ? <p className="helper-text">No practice attempts yet. Go to Challenge Lab, run evaluations, then come back to see your radar update.</p> : null}
         <div className="radar-controls">
           <button type="button" className="secondary" onClick={() => setShowLowMasteryOnly((prev) => !prev)}>
             {showLowMasteryOnly ? 'Show All Topics' : 'Show Focus Topics'}
@@ -78,6 +82,7 @@ export default function AnalyticsPanel() {
         </ul>
       </div>
       {topWeakTopic ? <p>Focus next: {topWeakTopic.topic}</p> : null}
+      {hasData ? <p className="helper-text">Tip: use Show Focus Topics and adjust threshold to decide what to practice next.</p> : null}
     </div>
   )
 }

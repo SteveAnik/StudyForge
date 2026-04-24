@@ -337,6 +337,22 @@ button.secondary {
   color: #dbe6ff;
 }
 
+.helper-text {
+  margin: 0;
+  color: #a9bbea;
+  font-size: 0.88rem;
+}
+
+.result-success {
+  border-color: #2f7f58;
+  background: #133223;
+}
+
+.result-fail {
+  border-color: #7f3434;
+  background: #341b1b;
+}
+
 .radar-intro p {
   margin-bottom: 8px;
   color: #c8d7ff;

@@ -98,6 +98,11 @@ export default function PracticePanel({ mode = 'challenge' }) {
       setResult(null)
       return
     }
+    if (!submittedOutput.trim()) {
+      setSubmitError('Enter an output value before running evaluation.')
+      setResult(null)
+      return
+    }
     setSubmitError('')
     try {
       const response = await evaluate.mutateAsync({
@@ -184,6 +189,7 @@ export default function PracticePanel({ mode = 'challenge' }) {
           {isChallengeLoading ? <p>Loading challenges...</p> : null}
           {challengeLoadError ? <p className="error">{challengeError?.message || 'Failed to load challenges.'}</p> : null}
           <select value={selectedChallengeId} onChange={(e) => setSelectedChallengeId(e.target.value)} disabled={!challenges.length}>
+            {challenges.length ? null : <option value="">No challenge available</option>}
             {challenges.map((challenge) => (
               <option key={challenge.id} value={challenge.id}>{challenge.title}</option>
             ))}
@@ -219,12 +225,19 @@ export default function PracticePanel({ mode = 'challenge' }) {
             placeholder={outputPlaceholder(selectedChallenge?.submission_type)}
             spellCheck={false}
           />
+          {selectedChallenge ? <p className="helper-text">Expected type: {selectedChallenge.submission_type}. Enter your computed output and press Run Evaluation.</p> : null}
           <div className="challenge-actions">
             <button type="submit" disabled={!selectedChallenge || evaluate.isPending}>
               {evaluate.isPending ? 'Evaluating...' : 'Run Evaluation'}
             </button>
             {submitError ? <p className="error result-pill">{submitError}</p> : null}
-            {result ? <p className="result-pill">Score: {result.score} - {result.feedback}</p> : null}
+            {result ? (
+              <div className={result.score === 100 ? 'result-pill result-success' : 'result-pill result-fail'}>
+                <p>Score: {result.score}</p>
+                <p>{result.feedback}</p>
+                <p>Challenge: {result.challenge.title}</p>
+              </div>
+            ) : null}
           </div>
         </div>
       </form>
