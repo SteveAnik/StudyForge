@@ -12,8 +12,8 @@ backend/**/__pycache__/
 backend/**/*.pyc
 
 # env
-.env
-*.env
+!*.env
+!**/.env
 
 # local tooling
 .abacusai/
